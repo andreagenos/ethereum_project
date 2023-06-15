@@ -2,7 +2,7 @@ SONIC PLATFORM (USING DJANGO, MONGODB, WEB3.PY, SOLIDITY, BROWNIE AND GANACHE)
 
 🚀 Goal of the project
 
-The goal of the project is to create a platform that collects user-related data about the crypto sector in exchange for a reword in Sonic Tokens, an ERC20 Token Smart Contract deployed in the blockchain.
+The goal of the project is to create a platform that collects user-related data about the crypto sector in exchange for a reword in Sonic Tokens, an ERC20 Token Smart Contract deployed on the blockchain.
 
 Features Implemented:
 
@@ -10,9 +10,9 @@ Features Implemented:
 
 • Test Smart Contract with Brownie and Ganache
 
-• Deploy on remix Sonic Smart Contract (ERC20)
+• Deploy on Remix Sonic Smart Contract (ERC20)
 
-• Fill out the survey and receive a reward in Sonic Tokens
+• Fill out the Survey and receive a reward in Sonic Tokens
 
 • Get the transaction receipt after the survey submission
 
