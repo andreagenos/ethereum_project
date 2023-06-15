@@ -1,0 +1,118 @@
+{% extends 'app/base.html' %}
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<header>
+    <div id="header">
+        <title>Sonic</title>
+        <h1 class="title">SONIC</h1>
+    </div>
+</header>
+<body>
+    <div>
+
+    {% if user.is_authenticated %}
+    <center>
+        <h1>Welcome Web3 User!</h1>
+        <h2>Eth Address: {{ user.username }} </h2>
+        <a href="{% url 'logout' %}?next={% url 'moralis_auth' %}">Logout</a>
+        <br/>
+        <a href="{% url 'my_profile' %}"> My profile </a>
+        <p class="menu">Welcome {{ user.username }} - <a href="{% url 'survey' %}">Survey</a></p>
+    </center>
+    {% else %}
+    <center>
+        <h1>Web3 Login </h1>
+        <button class="btn" id="auth-metamask">Login with Metamask</button>
+    </center>
+    {% endif %}
+    </div>
+  
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+
+    {% if user.is_authenticated %}
+    {% else %}
+    <script>
+    const elBtnMetamask = document.getElementById('auth-metamask');
+
+    const handleApiPost = async (endpoint, params) => {
+      const result = await axios.post(`${endpoint}`, params, {
+        headers: {
+          'Content-Type': 'application/json',
+          "X-CSRFToken": '{{ csrf_token }}'
+        },
+      });
+    
+      return result.data;
+    };
+
+    const requestMessage = (account, chain) =>
+      handleApiPost('{% url "request_message" %}', {
+        address: account,
+        chain: chain,
+        network: 'evm',
+      });
+
+    const verifyMessage = (message, signature) =>
+      handleApiPost('{% url "verify_message" %}', {
+        message,
+        signature,
+        network: 'evm',
+      });
+
+    const connectToMetamask = async () => {
+      const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+    
+      const [accounts, chainId] = await Promise.all([
+        provider.send('eth_requestAccounts', []),
+        provider.send('eth_chainId', []),
+      ]);
+
+      const signer = provider.getSigner();
+      return { signer, chain: chainId, account: accounts[0] };
+    };
+
+    const handleAuth = async () => {
+      // Connect to Metamask
+      const { signer, chain, account } = await connectToMetamask();
+      console.log("account", account, "chain", chain)
+
+      if (!account) {
+        throw new Error('No account found');
+      }
+      if (!chain) {
+        throw new Error('No chain found');
+      }
+
+      const { message } = await requestMessage(account, chain);
+      const signature = await signer.signMessage(message);
+      const { user } = await verifyMessage(message, signature);
+      console.log(user)
+      if (user) {
+        location.reload();
+      }
+      else{
+        alert("authentication error")
+      }
+    };
+
+
+    function init() {
+      elBtnMetamask.addEventListener('click', async () => {
+        handleAuth().catch((error) => console.log(error));
+      });
+    }
+
+    window.addEventListener('load', () => {
+      init();
+    });
+
+    </script>
+    {% endif %}
+</body>
+{% endblock %}
+</html>

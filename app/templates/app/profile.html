@@ -1,0 +1,42 @@
+{% extends 'app/base.html' %}
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<header>
+    <div id="header">
+        <title>Sonic</title>
+        <h1 class="title">SONIC</h1>
+    </div>
+</header>
+<body>
+    <div>
+
+    {% if user.is_authenticated %}
+        <center>
+        <h1>Eth Address: {{ user.username }}</h1>
+        </center>
+        <h3>Session auth info</h3>
+        <table width="200px" border="0px" padding="5px">
+        {% for key,value in request.session.auth_info.items %}
+            <tr><td>{{key}}</td><td><pre>{{ value }}</pre></td></tr>
+        {% endfor %}
+        </table>
+        <table width="200px" border="0px" padding="0px">
+        <h3>Verified user info</h3>
+        {% for key,value in request.session.verified_data.items %}
+            <tr><td>{{key}}</td><td>{{ value }}</td></tr>
+        {% endfor %}
+
+        </table>
+        <br/>
+        <a href="{% url 'logout' %}?next={% url 'moralis_auth' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'moralis_auth' %}"> Login page </a>
+    {% endif %}
+    </div>
+
+</body>
+{% endblock %}
+</html>

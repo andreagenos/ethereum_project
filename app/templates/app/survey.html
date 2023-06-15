@@ -1,0 +1,29 @@
+{% extends 'app/base.html' %}
+{% block content %}
+{% load static %}
+
+    <header>
+        <div id="header">
+            <title>Sonic</title>
+            <h1 class="title">SONIC</h1>
+            <h2 class="subtitle">Compile the Survey and get your Reword in SONIC Tokens!</h2>
+        </div>
+    </header>
+
+    {% if user.is_authenticated %}
+    <p class="menu">Welcome {{ user.username }} <a href="{% url 'moralis_auth' %}">Login/Logout</a> </p>
+
+    <h3>Survey</h3>
+     <form method="POST" class="order-form">{% csrf_token %}
+         {{ form.as_p }}
+         <button type="submit" class="save btn btn-default">Save</button>
+     </form>
+
+    {% else %}
+     <div id="login_info">
+        <p>You are not logged in. Please <a href="{% url 'moralis_auth' %}">Log In</a></p>
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+      </div>
+    {% endif %}
+{% endblock %}
+</html>

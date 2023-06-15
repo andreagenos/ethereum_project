@@ -1,0 +1,22 @@
+{% extends 'app/base.html' %}
+{% block content %}
+{% load static %}
+
+<header>
+    <div id="header">
+        <title>Sonic</title>
+        <h1 class="title">SONIC</h1>
+        <h2 class="subtitle">Welcome to the Sonic Platform!</h2>
+        <h3 class="message">We are collecting data about the crypto sector through a short survey, fill it out too and get a reward in Sonic Tokens!</h3>
+    </div>
+</header>
+<body>
+    <div id="login_info">
+        {% if user.is_authenticated %}
+            <p class="menu">Welcome {{ user.username }} - <a href="{% url 'survey' %}">Survey</a> - <a href="{% url 'moralis_auth' %}">Login/Logout</a></p>
+        {% endif %}
+    </div>
+</body>
+
+{% endblock %}
+</html>
